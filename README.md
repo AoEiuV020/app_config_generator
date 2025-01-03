@@ -42,6 +42,7 @@ targets:
         options:
           output_file: lib/src/config/app_config.g.dart  # 可选，默认是 lib/config/app_config.g.dart
           use_record_type: false  # 可选，默认false使用Map类型，true使用Record类型
+          class_name: AppConfig  # 可选，默认是 AppConfig
 ```
 
 ### 2. 创建配置文件

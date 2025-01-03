@@ -11,5 +11,6 @@ Builder appConfig(BuilderOptions options) {
     overrideFile: options.config['override_file'] as String? ??
         'app_config_overrides.yaml',
     useRecordType: options.config['use_record_type'] as bool? ?? false,
+    className: options.config['class_name'] as String? ?? 'AppConfig',
   );
 }

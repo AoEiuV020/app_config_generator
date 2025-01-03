@@ -12,12 +12,14 @@ class AppConfigGenerator implements Builder {
   final String outputFile;
   final String? overrideFile;
   final bool useRecordType;
+  final String className;
 
   AppConfigGenerator({
     this.configFile = 'app_config.yaml',
     this.outputFile = 'lib/config/app_config.g.dart',
     this.overrideFile = 'app_config_overrides.yaml',
     this.useRecordType = false,
+    this.className = 'AppConfig',
   });
 
   @override
@@ -66,7 +68,7 @@ class AppConfigGenerator implements Builder {
   String generateConfig(Map yaml) {
     final cls = Class((c) {
       c
-        ..name = 'AppConfig'
+        ..name = className
         ..modifier = ClassModifier.final$
         ..fields.addAll(
           yaml.entries.map((entry) {
