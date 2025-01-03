@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Add support for customizing config class name via `class_name` option
+
 ## 1.1.0
 
 - Add support for Dart record syntax generation (opt-in via `use_record_type: true`)
