@@ -1,0 +1,103 @@
+name: CI
+env:
+  TZ: Asia/Shanghai
+on:
+  push:
+    paths-ignore:
+      - '**/README.md'
+      - '.github/workflows/*'
+      - '!.github/workflows/main.yml'
+  pull_request:
+    paths-ignore:
+      - '**/README.md'
+      - '.github/workflows/*'
+      - '!.github/workflows/main.yml'
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+jobs:
+  # https://dart.dev/tools/pub/automated-publishing
+  pub_dev_publish:
+    name: publish packages
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    steps:
+      - name: init custom env
+        run: |
+          set -a
+          BUILD_NAME="${GITHUB_REPOSITORY#*/}"
+          if [[ ${GITHUB_REF} == refs/tags/v* ]]
+          then
+              CREATE_RELEASE="true"
+              BUILD_VERSION=${GITHUB_REF#refs/tags/v}
+              if [[ -x ./latest-changelog.sh ]]
+              then
+                  RELEASE_BODY=$(./latest-changelog.sh $BUILD_VERSION)
+                  TG_CHANGELOG=$RELEASE_BODY
+              fi
+              if [[ -z "$RELEASE_BODY" ]]
+              then
+                  RELEASE_BODY='### ${{ github.event.head_commit.message }}'
+                  TG_CHANGELOG="$(echo "$RELEASE_BODY"|sed -n "s/### \(.*\)/\1/p" |sed -n '{;=;p}' | sed "N;s/\n/. /g")"
+              fi
+          elif [[ ${GITHUB_REF} == refs/pull* ]]
+          then
+              CREATE_RELEASE="false"
+              num=${GITHUB_REF#refs/pull/}
+              num=${num%/merge}
+              BUILD_VERSION=pr-${num}-"$(date +'%Y%m%d%H%M%S')"
+          elif [[ ${GITHUB_EVENT_NAME} == workflow_dispatch ]]
+          then
+              CREATE_RELEASE="false"
+              BUILD_VERSION="$(date +'%Y%m%d%H%M%S')"
+          elif [[ ${GITHUB_REF} == refs/heads* ]]
+          then
+              CREATE_RELEASE="false"
+              BUILD_VERSION="${GITHUB_REF#refs/heads/}-$(date +'%Y%m%d%H%M%S')"
+              RELEASE_BODY=$(echo '${{ toJson(github.event.commits) }}' |jq -r 'map("### "+.message)|join("\n\n------\n")')
+              TG_CHANGELOG="$(echo "$RELEASE_BODY"|sed -n "s/### \(.*\)/\1/p" |sed -n '{;=;p}' | sed "N;s/\n/. /g")"
+              VERSION_PREFIX='内测版-'
+          else
+              CREATE_RELEASE="false"
+              BUILD_VERSION="$(date +'%Y%m%d%H%M%S')"
+          fi
+          BUILD_NAME_WITH_VERSION="$BUILD_NAME-$BUILD_VERSION"
+          echo BUILD_NAME="$BUILD_NAME" >> .custom_env
+          echo BUILD_VERSION="$BUILD_VERSION" >> .custom_env
+          echo BUILD_NAME_WITH_VERSION="$BUILD_NAME_WITH_VERSION" >> .custom_env
+          echo CREATE_RELEASE="$CREATE_RELEASE" >> .custom_env
+          if test -n "$RELEASE_BODY"
+          then
+              echo 'RELEASE_BODY<<EOF' >> .custom_env
+              echo "$RELEASE_BODY" >> .custom_env
+              echo 'EOF' >> .custom_env
+              if [ -f template-update.md ]
+              then
+                  echo 'UPDATE_BODY<<EOF' >> .custom_env
+                  envsubst < template-update.md >> .custom_env
+                  echo >> .custom_env
+                  echo 'EOF' >> .custom_env
+              fi
+          fi
+          echo DEPLOY_WEB="true" >> .custom_env
+          if [[ "$CREATE_RELEASE" == "true" && -n "${{ secrets.TELEGRAM_TO }}" && -n "${{ secrets.TELEGRAM_TOKEN }}" ]]
+          then
+              echo SEND_TELEGRAM="true" >> .custom_env
+          fi
+          cat .custom_env
+          cat .custom_env >> $GITHUB_ENV
+      - uses: actions/checkout@v4
+      - uses: flutter-actions/setup-flutter@v4
+      - uses: flutter-actions/setup-pubdev-credentials@v1
+      - run: ./script/prepare.sh
+      - name: publish dry run
+        if: ${{ env.CREATE_RELEASE != 'true' }}
+        run: ./script/publish_dry_run.sh
+      - name: publish package
+        if: ${{ env.CREATE_RELEASE == 'true' }}
+        run: ./script/publish.sh
