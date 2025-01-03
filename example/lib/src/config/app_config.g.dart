@@ -3,22 +3,22 @@
 // 覆盖配置文件: app_config_overrides.yaml
 
 final class AppConfig {
-  static final String appName = 'Example Override';
+  static final appName = 'Example Override';
 
-  static final String version = '1.0.0';
+  static final version = '1.0.0';
 
-  static final Map<String, dynamic> api = {
-    'baseUrl': 'https://api.example.com',
-    'timeout': 30,
-  };
+  static final api = (
+    baseUrl: 'https://api.example.com',
+    timeout: 30,
+  );
 
-  static final Map<String, dynamic> database = {
-    'name': 'example.db',
-    'version': 1,
-  };
+  static final database = (
+    name: 'example.db',
+    version: 1,
+  );
 
-  static final Map<String, dynamic> features = {
-    'darkMode': true,
-    'notifications': true,
-  };
+  static final features = (
+    darkMode: true,
+    notifications: true,
+  );
 }

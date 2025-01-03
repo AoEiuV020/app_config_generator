@@ -70,13 +70,9 @@ class AppConfigGenerator implements Builder {
             final key = entry.key as String;
             final value = entry.value;
 
-            // 根据值的类型确定字段类型
-            final type = _getTypeReference(value);
-
             return Field((f) => f
               ..name = key
               ..modifier = FieldModifier.final$
-              ..type = type
               ..static = true
               ..assignment = _getLiteralValue(value).code);
           }),
@@ -95,17 +91,6 @@ ${cls.accept(emitter)}
 ''');
   }
 
-  /// 根据值类型返回对应的Reference
-  Reference _getTypeReference(dynamic value) {
-    if (value is String) return refer('String');
-    if (value is int) return refer('int');
-    if (value is double) return refer('double');
-    if (value is bool) return refer('bool');
-    if (value is List) return refer('List<dynamic>');
-    if (value is Map) return refer('Map<String, dynamic>');
-    return refer('dynamic');
-  }
-
   /// 根据值类型返回对应的Literal
   Expression _getLiteralValue(dynamic value) {
     if (value is String) return literalString(value);
@@ -113,7 +98,28 @@ ${cls.accept(emitter)}
     if (value is double) return literalNum(value);
     if (value is bool) return literalBool(value);
     if (value is List) return literalList(value);
-    if (value is Map) return literalMap(value.cast<String, dynamic>());
+    if (value is Map) {
+      // 使用record语法生成map
+      final entries = value.entries
+          .map((e) => '${e.key}: ${_getStringValue(e.value)}')
+          .join(',\n    ');
+      return CodeExpression(Code('(\n    $entries,\n  )'));
+    }
     return literalNull;
+  }
+
+  /// 获取值的字符串表示
+  String _getStringValue(dynamic value) {
+    if (value is String) return "'$value'";
+    if (value is num) return value.toString();
+    if (value is bool) return value.toString();
+    if (value is List) return value.toString();
+    if (value is Map) {
+      final entries = value.entries
+          .map((e) => '${e.key}: ${_getStringValue(e.value)}')
+          .join(', ');
+      return '($entries)';
+    }
+    return 'null';
   }
 }
