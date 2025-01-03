@@ -2,6 +2,10 @@
 
 一个用于自动生成 App 配置代码的 Dart 包。通过简单的 YAML 配置文件，自动生成类型安全的 Dart 配置类。
 
+[![Main version](https://img.shields.io/pub/v/app_config_generator.svg)](https://pub.dev/packages/app_config_generator)
+[![CI](https://github.com/AoEiuV020/app_config_generator/workflows/CI/badge.svg)](https://github.com/AoEiuV020/app_config_generator/actions)
+[![Using melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
+
 ## 特性
 
 - 从 YAML 文件自动生成 Dart 配置类
