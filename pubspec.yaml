@@ -1,6 +1,6 @@
 name: app_config_generator
 description: A Dart package for automatically generating app configuration code.
-version: 1.0.2
+version: 1.1.0
 repository: https://github.com/AoEiuV020/app_config_generator
 
 environment:

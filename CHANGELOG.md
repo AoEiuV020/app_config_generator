@@ -1,3 +1,9 @@
+## 1.1.0
+
+- Add support for Dart record syntax generation (opt-in via `use_record_type: true`)
+- Refactor code generation to support both Map and Record types
+- Add example with complex nested configuration
+
 ## 1.0.2
 
 - Remove snake_case to camelCase conversion
