@@ -7,18 +7,9 @@ final class AppConfig {
 
   static final version = '1.0.0';
 
-  static final api = (
-    baseUrl: 'https://api.example.com',
-    timeout: 30,
-  );
+  static final api = (baseUrl: 'https://api.example.com', timeout: 30);
 
-  static final database = (
-    name: 'example.db',
-    version: 1,
-  );
+  static final database = (name: 'example.db', version: 1);
 
-  static final features = (
-    darkMode: true,
-    notifications: true,
-  );
+  static final features = (darkMode: true, notifications: true);
 }

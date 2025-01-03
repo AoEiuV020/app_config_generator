@@ -95,10 +95,7 @@ ${cls.accept(emitter)}
 
   /// 获取字面量值
   Expression _getLiteralValue(dynamic value) {
-    if (value is! Map) {
-      return _getPrimitiveValue(value);
-    }
-    return useRecordType ? _getRecordValue(value) : _getMapValue(value);
+    return _getPrimitiveValue(value);
   }
 
   /// 获取基础类型的值
@@ -108,6 +105,9 @@ ${cls.accept(emitter)}
     if (value is double) return literalNum(value);
     if (value is bool) return literalBool(value);
     if (value is List) return literalList(value);
+    if (value is Map) {
+      return useRecordType ? _getRecordValue(value) : _getMapValue(value);
+    }
     return literalNull;
   }
 
@@ -118,24 +118,12 @@ ${cls.accept(emitter)}
 
   /// 获取Record类型的值
   Expression _getRecordValue(Map value) {
-    final entries = value.entries
-        .map((e) => "${e.key}: ${_getStringValue(e.value)}")
-        .join(',\n    ');
-    return CodeExpression(Code('(\n    $entries,\n  )'));
-  }
-
-  /// 获取值的字符串表示
-  String _getStringValue(dynamic value) {
-    if (value is String) return "'$value'";
-    if (value is num) return value.toString();
-    if (value is bool) return value.toString();
-    if (value is List) return value.toString();
-    if (value is Map) {
-      final entries = value.entries
-          .map((e) => "${e.key}: ${_getStringValue(e.value)}")
-          .join(', ');
-      return '($entries)';
-    }
-    return 'null';
+    final positionalFields = <Expression>[];
+    final namedFields = Map.fromEntries(
+      value.entries.map(
+        (e) => MapEntry(e.key as String, _getPrimitiveValue(e.value)),
+      ),
+    );
+    return literalRecord(positionalFields, namedFields);
   }
 }
