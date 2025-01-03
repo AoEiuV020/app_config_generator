@@ -1,4 +1,4 @@
-import 'package:example/config/app_config.g.dart';
+import 'package:example/src/config/app_config.g.dart';
 
 void exampleMain() {
   print('App Name: ${AppConfig.appName}');

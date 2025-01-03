@@ -32,6 +32,10 @@ targets:
       include:
         - app_config.yaml
         - app_config_overrides.yaml
+    builders: # 可选，
+      app_config_generator:app_config:
+        options:
+          output_file: lib/src/config/app_config.g.dart # 可选，默认是 lib/config/app_config.g.dart
 ```
 
 ### 2. 创建配置文件
