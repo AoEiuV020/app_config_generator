@@ -7,4 +7,5 @@ targets:
     builders: # 可选，
       app_config_generator:app_config:
         options:
+          use_record_type: true
           output_file: lib/src/config/app_config.g.dart 

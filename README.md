@@ -5,7 +5,8 @@
 ## 特性
 
 - 从 YAML 文件自动生成 Dart 配置类
-- 支持类型安全的配置访问，使用 Dart record 语法
+- 支持类型安全的配置访问
+- 支持 Map 和 Record 两种访问方式
 - 支持配置覆盖文件
 - 支持自动代码生成和热重载
 
@@ -32,10 +33,11 @@ targets:
       include:
         - app_config.yaml
         - app_config_overrides.yaml
-    builders: # 可选，
+    builders:
       app_config_generator:app_config:
         options:
-          output_file: lib/src/config/app_config.g.dart # 可选，默认是 lib/config/app_config.g.dart
+          output_file: lib/src/config/app_config.g.dart  # 可选，默认是 lib/config/app_config.g.dart
+          use_record_type: false  # 可选，默认false使用Map类型，true使用Record类型
 ```
 
 ### 2. 创建配置文件
@@ -68,7 +70,19 @@ dart run build_runner watch
 
 ### 4. 使用生成的配置
 
-生成的代码会使用 Dart record 语法，提供类型安全和自动补全支持：
+默认使用 Map 类型（`use_record_type: false`）：
+
+```dart
+import 'package:your_app/config/app_config.g.dart';
+
+void main() {
+  print(AppConfig.appName);  // String
+  print(AppConfig.api['baseUrl']);  // String
+  print(AppConfig.api['timeout']);  // int
+}
+```
+
+使用 Record 类型（`use_record_type: true`）：
 
 ```dart
 import 'package:your_app/config/app_config.g.dart';
@@ -77,7 +91,10 @@ void main() {
   print(AppConfig.appName);  // String
   print(AppConfig.api.baseUrl);  // String
   print(AppConfig.api.timeout);  // int
-  print(AppConfig.api.baseUrl);  // https://api.example.com
+  
+  // 支持解构
+  final (baseUrl: url, timeout: t) = AppConfig.api;
+  print(url);  // https://api.example.com
 }
 ```
 

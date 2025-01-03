@@ -10,11 +10,13 @@ class AppConfigGenerator implements Builder {
   final String configFile;
   final String outputFile;
   final String? overrideFile;
+  final bool useRecordType;
 
   AppConfigGenerator({
     this.configFile = 'app_config.yaml',
     this.outputFile = 'lib/config/app_config.g.dart',
     this.overrideFile = 'app_config_overrides.yaml',
+    this.useRecordType = false,
   });
 
   @override
@@ -91,21 +93,35 @@ ${cls.accept(emitter)}
 ''');
   }
 
-  /// 根据值类型返回对应的Literal
+  /// 获取字面量值
   Expression _getLiteralValue(dynamic value) {
+    if (value is! Map) {
+      return _getPrimitiveValue(value);
+    }
+    return useRecordType ? _getRecordValue(value) : _getMapValue(value);
+  }
+
+  /// 获取基础类型的值
+  Expression _getPrimitiveValue(dynamic value) {
     if (value is String) return literalString(value);
     if (value is int) return literalNum(value);
     if (value is double) return literalNum(value);
     if (value is bool) return literalBool(value);
     if (value is List) return literalList(value);
-    if (value is Map) {
-      // 使用record语法生成map
-      final entries = value.entries
-          .map((e) => '${e.key}: ${_getStringValue(e.value)}')
-          .join(',\n    ');
-      return CodeExpression(Code('(\n    $entries,\n  )'));
-    }
     return literalNull;
+  }
+
+  /// 获取Map类型的值
+  Expression _getMapValue(Map value) {
+    return literalMap(value.cast<String, dynamic>());
+  }
+
+  /// 获取Record类型的值
+  Expression _getRecordValue(Map value) {
+    final entries = value.entries
+        .map((e) => "${e.key}: ${_getStringValue(e.value)}")
+        .join(',\n    ');
+    return CodeExpression(Code('(\n    $entries,\n  )'));
   }
 
   /// 获取值的字符串表示
@@ -116,7 +132,7 @@ ${cls.accept(emitter)}
     if (value is List) return value.toString();
     if (value is Map) {
       final entries = value.entries
-          .map((e) => '${e.key}: ${_getStringValue(e.value)}')
+          .map((e) => "${e.key}: ${_getStringValue(e.value)}")
           .join(', ');
       return '($entries)';
     }
