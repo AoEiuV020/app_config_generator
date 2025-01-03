@@ -5,7 +5,7 @@
 ## 特性
 
 - 从 YAML 文件自动生成 Dart 配置类
-- 支持类型安全的配置访问
+- 支持类型安全的配置访问，使用 Dart record 语法
 - 支持配置覆盖文件
 - 支持自动代码生成和热重载
 
@@ -68,12 +68,16 @@ dart run build_runner watch
 
 ### 4. 使用生成的配置
 
+生成的代码会使用 Dart record 语法，提供类型安全和自动补全支持：
+
 ```dart
 import 'package:your_app/config/app_config.g.dart';
 
 void main() {
-  print(AppConfig.appName);
-  print(AppConfig.api['baseUrl']);
+  print(AppConfig.appName);  // String
+  print(AppConfig.api.baseUrl);  // String
+  print(AppConfig.api.timeout);  // int
+  print(AppConfig.api.baseUrl);  // https://api.example.com
 }
 ```
 
