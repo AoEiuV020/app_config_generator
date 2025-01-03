@@ -73,11 +73,8 @@ class AppConfigGenerator implements Builder {
             // 根据值的类型确定字段类型
             final type = _getTypeReference(value);
 
-            // 转换字段名为驼峰命名
-            final fieldName = _toCamelCase(key);
-
             return Field((f) => f
-              ..name = fieldName
+              ..name = key
               ..modifier = FieldModifier.final$
               ..type = type
               ..static = true
@@ -96,18 +93,6 @@ class AppConfigGenerator implements Builder {
 
 ${cls.accept(emitter)}
 ''');
-  }
-
-  /// 将下划线命名转换为驼峰命名
-  String _toCamelCase(String input) {
-    if (!input.contains('_')) return input;
-
-    return input.split('_').indexed.map((item) {
-      final word = item.$2;
-      if (item.$1 == 0) return word;
-      if (word.isEmpty) return '';
-      return word[0].toUpperCase() + word.substring(1);
-    }).join('');
   }
 
   /// 根据值类型返回对应的Reference

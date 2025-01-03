@@ -39,9 +39,9 @@ targets:
 创建 `app_config.yaml` 文件：
 
 ```yaml
-app_name: My App
+appName: My App
 api:
-  base_url: https://api.example.com
+  baseUrl: https://api.example.com
   timeout: 30
 database:
   name: app.db
@@ -69,7 +69,7 @@ import 'package:your_app/config/app_config.g.dart';
 
 void main() {
   print(AppConfig.appName);
-  print(AppConfig.api['base_url']);
+  print(AppConfig.api['baseUrl']);
 }
 ```
 
@@ -79,7 +79,7 @@ void main() {
 
 ```yaml
 api:
-  base_url: http://localhost:8080
+  baseUrl: http://localhost:8080
 ```
 
 ## License

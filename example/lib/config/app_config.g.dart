@@ -8,7 +8,7 @@ final class AppConfig {
   static final String version = '1.0.0';
 
   static final Map<String, dynamic> api = {
-    'base_url': 'https://api.example.com',
+    'baseUrl': 'https://api.example.com',
     'timeout': 30,
   };
 
@@ -18,7 +18,7 @@ final class AppConfig {
   };
 
   static final Map<String, dynamic> features = {
-    'dark_mode': true,
+    'darkMode': true,
     'notifications': true,
   };
 }

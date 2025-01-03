@@ -1,11 +1,11 @@
-app_name: Example App
+appName: Example App
 version: 1.0.0
 api:
-  base_url: https://api.example.com
+  baseUrl: https://api.example.com
   timeout: 30
 database:
   name: example.db
   version: 1
 features:
-  dark_mode: true
+  darkMode: true
   notifications: true 
