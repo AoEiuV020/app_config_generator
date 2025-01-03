@@ -3,7 +3,7 @@
 // 覆盖配置文件: app_config_overrides.yaml
 
 final class AppConfig {
-  static final String appName = 'Example App';
+  static final String appName = 'Example Override';
 
   static final String version = '1.0.0';
 
