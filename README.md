@@ -1,39 +1,87 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# App Config Generator
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages). 
+一个用于自动生成 App 配置代码的 Dart 包。通过简单的 YAML 配置文件，自动生成类型安全的 Dart 配置类。
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages). 
--->
+## 特性
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+- 从 YAML 文件自动生成 Dart 配置类
+- 支持类型安全的配置访问
+- 支持配置覆盖文件
+- 支持自动代码生成和热重载
 
-## Features
+## 安装
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+将 `app_config_generator` 添加到你的 `pubspec.yaml` 的 dev_dependencies 中：
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+```yaml
+dev_dependencies:
+  app_config_generator: ^1.0.0
+  build_runner: ^2.4.0
 ```
 
-## Additional information
+## 使用方法
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+### 1. 配置 build.yaml
+
+在项目根目录创建或编辑 `build.yaml`：
+
+```yaml
+targets:
+  $default:
+    sources:
+      include:
+        - app_config.yaml
+        - app_config_overrides.yaml
+```
+
+### 2. 创建配置文件
+
+创建 `app_config.yaml` 文件：
+
+```yaml
+app_name: My App
+api:
+  base_url: https://api.example.com
+  timeout: 30
+database:
+  name: app.db
+  version: 1
+```
+
+### 3. 生成配置代码
+
+运行以下命令生成配置代码：
+
+```bash
+dart run build_runner build
+```
+
+或者在开发时使用 watch 命令：
+
+```bash
+dart run build_runner watch
+```
+
+### 4. 使用生成的配置
+
+```dart
+import 'package:your_app/config/app_config.g.dart';
+
+void main() {
+  print(AppConfig.appName);
+  print(AppConfig.api['base_url']);
+}
+```
+
+## 配置覆盖
+
+你可以创建 `app_config_overrides.yaml` 来覆盖默认配置，这个文件通常被添加到 `.gitignore` 中：
+
+```yaml
+api:
+  base_url: http://localhost:8080
+```
+
+## License
+
+MIT 
