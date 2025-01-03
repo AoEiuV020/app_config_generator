@@ -1,0 +1,14 @@
+builders:
+  app_config_generator:app_config:
+    import: "package:app_config_generator/app_config_generator.dart"
+    builder_factories: ["configBuilder"]
+    build_extensions: {"app_config.yaml": ["lib/config/app_config.g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    defaults:
+      generate_for:
+        - app_config.yaml
+      options:
+        config_file: app_config.yaml
+        output_file: lib/config/app_config.g.dart
+        override_file: app_config_overrides.yaml 

@@ -1,14 +1,16 @@
-name: config_generator
+name: app_config_generator
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/AoEiuV020/app_config_generator
 
 environment:
   sdk: ^3.6.0
 
-# Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
+  build: ^2.4.0
+  yaml: ^3.1.2
+  code_builder: ^4.5.0
+  dart_style: ^2.3.1
 
 dev_dependencies:
   lints: ^5.0.0
