@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
 /// 配置生成器
@@ -82,7 +83,7 @@ class AppConfigGenerator implements Builder {
     });
 
     final emitter = DartEmitter();
-    final formatter = DartFormatter();
+    final formatter = DartFormatter(languageVersion: Version(3, 0, 0));
 
     return formatter.format('''
 // GENERATED CODE - DO NOT MODIFY BY HAND
