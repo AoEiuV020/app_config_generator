@@ -3,17 +3,17 @@
 // 覆盖配置文件: app_config_overrides.yaml
 
 final class AppConfig {
-  static final appName = 'Example Override';
+  static const appName = 'Example Override';
 
-  static final version = '1.0.0';
+  static const version = '1.0.0';
 
-  static final api = (baseUrl: 'https://api.example.com', timeout: 30);
+  static const api = (baseUrl: 'https://api.example.com', timeout: 30);
 
-  static final database = (name: 'example.db', version: 1);
+  static const database = (name: 'example.db', version: 1);
 
-  static final features = (darkMode: true, notifications: true);
+  static const features = (darkMode: true, notifications: true);
 
-  static final theme = (
+  static const theme = (
     colors: (
       primary: '#2196F3',
       secondary: '#FF4081',

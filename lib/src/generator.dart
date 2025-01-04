@@ -77,8 +77,8 @@ class AppConfigGenerator implements Builder {
 
             return Field((f) => f
               ..name = key
-              ..modifier = FieldModifier.final$
               ..static = true
+              ..modifier = FieldModifier.constant
               ..assignment = _getLiteralValue(value).code);
           }),
         );
