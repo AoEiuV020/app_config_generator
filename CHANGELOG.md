@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Change config fields from `static final` to `static const` for better performance and compile-time constants
+
 ## 1.1.1
 
 - Add support for customizing config class name via `class_name` option
